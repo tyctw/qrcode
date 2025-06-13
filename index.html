@@ -592,56 +592,102 @@
                 return;
             }
 
-            // 確保圖片已完全載入
-            if (!qrCodeImg.complete) {
-                qrCodeImg.onload = function() {
-                    processDownload(qrCodeImg, invitationCode);
-                };
-                return;
-            }
+            // 檢測是否為移動設備
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-            processDownload(qrCodeImg, invitationCode);
-        }
+            if (isMobile) {
+                // 移動設備：直接開啟圖片在新分頁
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
+                    canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
+                    
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(qrCodeImg, 0, 0);
 
-        // 處理下載過程
-        function processDownload(qrCodeImg, invitationCode) {
-            try {
-                // 創建一個臨時的 canvas
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // 設置 canvas 大小為圖片的實際大小
-                canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
-                canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
-                
-                // 在 canvas 上繪製 QR Code
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(qrCodeImg, 0, 0);
-                
-                // 創建下載連結
-                const link = document.createElement('a');
-                link.download = `邀請碼_${invitationCode}.png`;
-                
-                // 使用較高品質的 PNG 格式
-                link.href = canvas.toDataURL('image/png', 1.0);
-                
-                // 將連結添加到文檔中
-                document.body.appendChild(link);
-                
-                // 觸發下載
-                link.click();
-                
-                // 移除連結
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                }, 100);
-                
-                // 顯示成功訊息
-                showMessage('success');
-            } catch (error) {
-                console.error('下載 QR Code 時發生錯誤：', error);
-                showMessage('error');
+                    // 在新分頁中開啟圖片
+                    const imageUrl = canvas.toDataURL('image/png', 1.0);
+                    const newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
+                            <html>
+                                <head>
+                                    <title>QR Code - ${invitationCode}</title>
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                    <style>
+                                        body {
+                                            margin: 0;
+                                            padding: 20px;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                            background: #f8fafc;
+                                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                                        }
+                                        img {
+                                            max-width: 100%;
+                                            height: auto;
+                                            margin-bottom: 20px;
+                                        }
+                                        .instructions {
+                                            text-align: center;
+                                            color: #475569;
+                                            font-size: 14px;
+                                            line-height: 1.6;
+                                            margin-top: 20px;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <img src="${imageUrl}" alt="QR Code">
+                                    <div class="instructions">
+                                        <p>長按圖片以儲存 QR Code</p>
+                                        <p>邀請碼：${invitationCode}</p>
+                                    </div>
+                                </body>
+                            </html>
+                        `);
+                        newTab.document.close();
+                        showMessage('success');
+                    } else {
+                        showMessage('error');
+                    }
+                } catch (error) {
+                    console.error('處理 QR Code 時發生錯誤：', error);
+                    showMessage('error');
+                }
+            } else {
+                // 桌面版：使用原有的下載方式
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
+                    canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
+                    
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(qrCodeImg, 0, 0);
+                    
+                    const link = document.createElement('a');
+                    link.download = `邀請碼_${invitationCode}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                    }, 100);
+                    
+                    showMessage('success');
+                } catch (error) {
+                    console.error('下載 QR Code 時發生錯誤：', error);
+                    showMessage('error');
+                }
             }
         }
     </script>
