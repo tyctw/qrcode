@@ -596,65 +596,122 @@
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             if (isMobile) {
-                // 移動設備：直接開啟圖片在新分頁
                 try {
+                    // 創建一個模態視窗來顯示 QR Code
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.8);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 1000;
+                        padding: 20px;
+                        box-sizing: border-box;
+                    `;
+
+                    // 創建容器
+                    const container = document.createElement('div');
+                    container.style.cssText = `
+                        background: white;
+                        padding: 20px;
+                        border-radius: 12px;
+                        width: 90%;
+                        max-width: 400px;
+                        text-align: center;
+                        position: relative;
+                    `;
+
+                    // 創建關閉按鈕
+                    const closeButton = document.createElement('button');
+                    closeButton.innerHTML = '×';
+                    closeButton.style.cssText = `
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        color: #666;
+                        padding: 5px 10px;
+                    `;
+                    closeButton.onclick = () => document.body.removeChild(modal);
+
+                    // 創建標題
+                    const title = document.createElement('h3');
+                    title.textContent = '儲存 QR Code';
+                    title.style.cssText = `
+                        margin: 0 0 15px 0;
+                        color: #1e293b;
+                        font-size: 18px;
+                    `;
+
+                    // 創建圖片容器
+                    const imgContainer = document.createElement('div');
+                    imgContainer.style.cssText = `
+                        background: white;
+                        padding: 15px;
+                        border-radius: 8px;
+                        margin: 10px 0;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                    `;
+
+                    // 複製並調整 QR Code 圖片
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
                     canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
                     canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
-                    
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(qrCodeImg, 0, 0);
 
-                    // 在新分頁中開啟圖片
-                    const imageUrl = canvas.toDataURL('image/png', 1.0);
-                    const newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                            <html>
-                                <head>
-                                    <title>QR Code - ${invitationCode}</title>
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                    <style>
-                                        body {
-                                            margin: 0;
-                                            padding: 20px;
-                                            display: flex;
-                                            flex-direction: column;
-                                            align-items: center;
-                                            background: #f8fafc;
-                                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                                        }
-                                        img {
-                                            max-width: 100%;
-                                            height: auto;
-                                            margin-bottom: 20px;
-                                        }
-                                        .instructions {
-                                            text-align: center;
-                                            color: #475569;
-                                            font-size: 14px;
-                                            line-height: 1.6;
-                                            margin-top: 20px;
-                                        }
-                                    </style>
-                                </head>
-                                <body>
-                                    <img src="${imageUrl}" alt="QR Code">
-                                    <div class="instructions">
-                                        <p>長按圖片以儲存 QR Code</p>
-                                        <p>邀請碼：${invitationCode}</p>
-                                    </div>
-                                </body>
-                            </html>
-                        `);
-                        newTab.document.close();
-                        showMessage('success');
-                    } else {
-                        showMessage('error');
-                    }
+                    const qrImage = new Image();
+                    qrImage.src = canvas.toDataURL('image/png', 1.0);
+                    qrImage.style.cssText = `
+                        max-width: 100%;
+                        height: auto;
+                        display: block;
+                        margin: 0 auto;
+                    `;
+
+                    // 創建說明文字
+                    const instructions = document.createElement('p');
+                    instructions.innerHTML = `
+                        長按圖片以儲存 QR Code<br>
+                        <span style="color: #64748b; font-size: 14px; margin-top: 5px; display: block;">
+                            邀請碼：${invitationCode}
+                        </span>
+                    `;
+                    instructions.style.cssText = `
+                        margin: 15px 0 0 0;
+                        color: #1e293b;
+                        font-size: 16px;
+                        line-height: 1.5;
+                    `;
+
+                    // 組裝模態視窗
+                    imgContainer.appendChild(qrImage);
+                    container.appendChild(closeButton);
+                    container.appendChild(title);
+                    container.appendChild(imgContainer);
+                    container.appendChild(instructions);
+                    modal.appendChild(container);
+                    document.body.appendChild(modal);
+
+                    // 點擊背景關閉模態視窗
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+
+                    showMessage('success');
                 } catch (error) {
                     console.error('處理 QR Code 時發生錯誤：', error);
                     showMessage('error');
