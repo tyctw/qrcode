@@ -152,7 +152,9 @@
             letter-spacing: 3px;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
             background: linear-gradient(to right, #1e40af, #3b82f6);
+            background-clip: text;
             -webkit-background-clip: text;
+            color: transparent;
             -webkit-text-fill-color: transparent;
             animation: shimmer 2s infinite linear;
             background-size: 200% auto;
@@ -316,6 +318,49 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+        }
+
+        .download-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .success-message {
+            color: #059669;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -333,6 +378,15 @@
             <div class="qr-box">
                 <div id="qrcode"></div>
                 <div id="invitation-code"></div>
+                <button class="download-button" onclick="downloadQRCode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    下載 QR Code
+                </button>
+                <div id="success-message" class="success-message">
+                    QR Code 已成功下載！
+                </div>
             </div>
 
             <div class="instructions">
@@ -394,6 +448,44 @@
                 document.getElementById('loading').style.display = 'none';
             }, 500);
         });
+
+        // 下載 QR Code 功能
+        function downloadQRCode() {
+            const qrCodeImg = document.querySelector('#qrcode img');
+            const invitationCode = new URLSearchParams(window.location.search).get('code');
+            
+            if (qrCodeImg && invitationCode) {
+                // 創建一個臨時的 canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 設置 canvas 大小
+                canvas.width = qrCodeImg.width;
+                canvas.height = qrCodeImg.height;
+                
+                // 在 canvas 上繪製 QR Code
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(qrCodeImg, 0, 0);
+                
+                // 創建下載連結
+                const link = document.createElement('a');
+                link.download = `邀請碼_${invitationCode}.png`;
+                link.href = canvas.toDataURL('image/png');
+                
+                // 觸發下載
+                link.click();
+                
+                // 顯示成功訊息
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+                
+                // 3秒後隱藏成功訊息
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
     </script>
 </body>
 </html> 
