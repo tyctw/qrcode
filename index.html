@@ -101,6 +101,62 @@
             border: 1px solid var(--glass-border);
         }
 
+        .code-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .copy-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .copy-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .copy-success {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(5, 150, 105, 0.9);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-success.show {
+            opacity: 1;
+        }
+
         #qrcode {
             background: var(--white);
             padding: 1.5rem;
@@ -363,6 +419,16 @@
             .footer-links a {
                 font-size: 0.9rem;
             }
+
+            .code-container {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .copy-button {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @keyframes fadeIn {
@@ -477,7 +543,15 @@
             <div class="card-grid">
                 <div class="qr-section">
                     <div id="qrcode"></div>
-                    <div id="invitation-code"></div>
+                    <div class="code-container">
+                        <div id="invitation-code"></div>
+                        <button class="copy-button" onclick="copyInvitationCode()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                            </svg>
+                            複製邀請碼
+                        </button>
+                    </div>
                 </div>
                 <div class="info-section">
                     <div class="info-card">
@@ -526,6 +600,13 @@
             <a href="mailto:tyctw.analyze@gmail.com">聯繫我們</a>
         </div>
     </footer>
+
+    <div id="copy-success" class="copy-success">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        邀請碼已複製到剪貼簿
+    </div>
 
     <script>
         // 等待文檔完全加載
@@ -746,6 +827,54 @@
                     showMessage('error');
                 }
             }
+        }
+
+        // 複製邀請碼功能
+        function copyInvitationCode() {
+            const invitationCode = new URLSearchParams(window.location.search).get('code');
+            if (!invitationCode) return;
+
+            // 使用 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(invitationCode).then(() => {
+                    showCopySuccess();
+                }).catch(() => {
+                    // 如果 Clipboard API 失敗，使用傳統方法
+                    fallbackCopyText(invitationCode);
+                });
+            } else {
+                // 在不支援 Clipboard API 的環境使用傳統方法
+                fallbackCopyText(invitationCode);
+            }
+        }
+
+        // 傳統複製文字方法
+        function fallbackCopyText(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showCopySuccess();
+            } catch (err) {
+                console.error('複製失敗：', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        // 顯示複製成功提示
+        function showCopySuccess() {
+            const successElement = document.getElementById('copy-success');
+            successElement.classList.add('show');
+            setTimeout(() => {
+                successElement.classList.remove('show');
+            }, 2000);
         }
     </script>
 </body>
