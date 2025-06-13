@@ -227,6 +227,25 @@
             text-align: center;
             display: none;
             animation: fadeIn 0.3s ease;
+            padding: 0.5rem 1rem;
+            background: rgba(5, 150, 105, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            padding: 0.5rem 1rem;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         .footer {
@@ -300,8 +319,14 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
         .loading {
@@ -438,6 +463,9 @@
                         <div id="success-message" class="success-message">
                             QR Code 已成功下載！
                         </div>
+                        <div id="error-message" class="error-message">
+                            下載失敗，請重新嘗試！
+                        </div>
                     </div>
                 </div>
             </div>
@@ -488,13 +516,32 @@
             }, 500);
         });
 
+        // 顯示訊息函數
+        function showMessage(type, duration = 3000) {
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            
+            // 隱藏所有訊息
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // 顯示指定類型的訊息
+            const targetMsg = type === 'success' ? successMsg : errorMsg;
+            targetMsg.style.display = 'block';
+            
+            // 設定定時器隱藏訊息
+            setTimeout(() => {
+                targetMsg.style.display = 'none';
+            }, duration);
+        }
+
         // 下載 QR Code 功能
         function downloadQRCode() {
             const qrCodeImg = document.querySelector('#qrcode img');
             const invitationCode = new URLSearchParams(window.location.search).get('code');
             
             if (!qrCodeImg || !invitationCode) {
-                alert('QR Code 尚未準備好，請稍候再試！');
+                showMessage('error');
                 return;
             }
 
@@ -516,9 +563,9 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 
-                // 設置 canvas 大小
-                canvas.width = qrCodeImg.width;
-                canvas.height = qrCodeImg.height;
+                // 設置 canvas 大小為圖片的實際大小
+                canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
+                canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
                 
                 // 在 canvas 上繪製 QR Code
                 ctx.fillStyle = '#ffffff';
@@ -528,24 +575,26 @@
                 // 創建下載連結
                 const link = document.createElement('a');
                 link.download = `邀請碼_${invitationCode}.png`;
-                link.href = canvas.toDataURL('image/png');
+                
+                // 使用較高品質的 PNG 格式
+                link.href = canvas.toDataURL('image/png', 1.0);
+                
+                // 將連結添加到文檔中
+                document.body.appendChild(link);
                 
                 // 觸發下載
-                document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
+                
+                // 移除連結
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                }, 100);
                 
                 // 顯示成功訊息
-                const successMessage = document.getElementById('success-message');
-                successMessage.style.display = 'block';
-                
-                // 3秒後隱藏成功訊息
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 3000);
+                showMessage('success');
             } catch (error) {
-                alert('下載過程中發生錯誤，請重新整理頁面後再試！');
                 console.error('下載 QR Code 時發生錯誤：', error);
+                showMessage('error');
             }
         }
     </script>
