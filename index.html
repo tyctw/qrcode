@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全國會考落點分析 - QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            transform: skewY(-12deg);
+            transform-origin: 0;
+            z-index: -1;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .qr-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .qr-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            border: 2px dashed #93c5fd;
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .qr-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 16px;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .qr-box:hover::before {
+            opacity: 1;
+        }
+
+        #qrcode {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        #qrcode:hover {
+            transform: scale(1.02);
+        }
+
+        #invitation-code {
+            margin-top: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e40af;
+            letter-spacing: 3px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to right, #1e40af, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 2s infinite linear;
+            background-size: 200% auto;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .instructions {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.8rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instructions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        .instructions h2 {
+            color: #92400e;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .instructions ul {
+            color: #92400e;
+            list-style: none;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .instructions li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.8rem;
+            text-align: center;
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+            margin: 0 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #3b82f6;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .footer a:hover::after {
+            transform: scaleX(1);
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .qr-container {
+                padding: 1.5rem;
+            }
+
+            .qr-box {
+                padding: 1.5rem;
+            }
+
+            #invitation-code {
+                font-size: 1.4rem;
+            }
+
+            .instructions {
+                padding: 1.5rem;
+            }
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header class="header">
+        <h1>全國會考落點分析</h1>
+        <p>您的專屬邀請碼 QR Code</p>
+    </header>
+
+    <main class="container">
+        <div class="qr-container">
+            <div class="qr-box">
+                <div id="qrcode"></div>
+                <div id="invitation-code"></div>
+            </div>
+
+            <div class="instructions">
+                <h2>
+                    <span>💡</span>
+                    使用說明
+                </h2>
+                <ul>
+                    <li>請將此 QR Code 妥善保存</li>
+                    <li>掃描 QR Code 可快速輸入邀請碼</li>
+                    <li>邀請碼有效期為當下整點59分</li>
+                    <li>如遇到問題，請聯繫我們的支援團隊</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© <span id="currentYear"></span> 全國會考落點分析 | 版權所有</p>
+        <div>
+            <a href="https://tyctw.github.io/" target="_blank">官方網站</a>
+            <span style="color: #cbd5e1;">|</span>
+            <a href="mailto:tyctw.analyze@gmail.com">聯繫我們</a>
+        </div>
+    </footer>
+
+    <script>
+        // 等待文檔完全加載
+        document.addEventListener('DOMContentLoaded', function() {
+            // 設置當前年份
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // 從 URL 獲取邀請碼
+            const urlParams = new URLSearchParams(window.location.search);
+            const invitationCode = urlParams.get('code');
+
+            if (!invitationCode) {
+                document.getElementById('qrcode').innerHTML = '<p style="color: #ef4444; padding: 1rem;">未提供邀請碼</p>';
+                document.getElementById('invitation-code').textContent = '請提供邀請碼參數';
+                document.getElementById('loading').style.display = 'none';
+                return;
+            }
+
+            // 顯示邀請碼
+            document.getElementById('invitation-code').textContent = invitationCode;
+
+            // 生成包含邀請碼的 QR Code
+            new QRCode(document.getElementById('qrcode'), {
+                text: invitationCode,
+                width: 256,
+                height: 256,
+                colorDark: '#1e40af',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // 隱藏載入動畫
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 500);
+        });
+    </script>
+</body>
+</html> 
