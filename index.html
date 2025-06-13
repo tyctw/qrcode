@@ -721,6 +721,7 @@
                         cursor: pointer;
                         color: #666;
                         padding: 5px 10px;
+                        z-index: 2;
                     `;
                     closeButton.onclick = () => document.body.removeChild(modal);
 
@@ -741,24 +742,18 @@
                         border-radius: 8px;
                         margin: 10px 0;
                         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                        position: relative;
                     `;
 
-                    // 複製並調整 QR Code 圖片
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
-                    canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(qrCodeImg, 0, 0);
-
-                    const qrImage = new Image();
-                    qrImage.src = canvas.toDataURL('image/png', 1.0);
+                    // 直接使用原始的 QR Code 圖片
+                    const qrImage = document.createElement('img');
+                    qrImage.src = qrCodeImg.src;
                     qrImage.style.cssText = `
                         max-width: 100%;
                         height: auto;
                         display: block;
                         margin: 0 auto;
+                        border-radius: 4px;
                     `;
 
                     // 創建說明文字
@@ -783,7 +778,11 @@
                     container.appendChild(imgContainer);
                     container.appendChild(instructions);
                     modal.appendChild(container);
-                    document.body.appendChild(modal);
+
+                    // 確保圖片載入後再顯示
+                    qrImage.onload = () => {
+                        document.body.appendChild(modal);
+                    };
 
                     // 點擊背景關閉模態視窗
                     modal.addEventListener('click', (e) => {
@@ -800,19 +799,9 @@
             } else {
                 // 桌面版：使用原有的下載方式
                 try {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    canvas.width = qrCodeImg.naturalWidth || qrCodeImg.width;
-                    canvas.height = qrCodeImg.naturalHeight || qrCodeImg.height;
-                    
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(qrCodeImg, 0, 0);
-                    
                     const link = document.createElement('a');
                     link.download = `邀請碼_${invitationCode}.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.href = qrCodeImg.src;
                     
                     document.body.appendChild(link);
                     link.click();
