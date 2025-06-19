@@ -585,10 +585,13 @@
                 padding-left: 1.5rem;
             }
 
+            .info-list li::before {
+                font-size: 1rem;
+            }
+
             .button-group {
                 flex-direction: column;
                 gap: 0.8rem;
-                margin-top: 1.5rem;
             }
 
             .action-button {
@@ -596,72 +599,43 @@
                 font-size: 1rem;
             }
 
-            .content-wrapper {
-                padding: 1rem;
-            }
-
-            .hero-section {
-                padding: 2rem 1rem 1rem;
-            }
-
             .footer {
                 padding: 1.5rem 1rem;
             }
 
+            .footer p {
+                font-size: 0.8rem;
+            }
+
             .footer-links {
-                flex-wrap: wrap;
-                gap: 1rem;
-                justify-content: center;
+                flex-direction: column;
+                gap: 0.5rem;
             }
 
             .footer-links a {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
 
-            /* 手機版特殊優化 */
-            .main-card {
-                margin: 0;
-                border-radius: var(--border-radius);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .floating-shape {
-                display: none; /* 手機版隱藏背景裝飾以提升性能 */
+            .bg-decoration {
+                display: none; /* 手機版隱藏動態裝飾 */
             }
         }
 
         @media (max-width: 480px) {
             .hero-title {
                 font-size: 2rem;
-                line-height: 1.2;
             }
 
             .hero-subtitle {
                 font-size: 1rem;
             }
 
-            .hero-description {
-                font-size: 0.9rem;
-                padding: 0 0.5rem;
-            }
-
-            .hero-section {
-                padding: 1.5rem 0.5rem 1rem;
-            }
-
-            .qr-section,
-            .info-section {
+            .qr-section {
                 padding: 1.5rem 1rem;
-            }
-
-            .qr-title {
-                font-size: 1.2rem;
-                margin-bottom: 1rem;
             }
 
             #qrcode {
                 padding: 1rem;
-                margin-bottom: 1rem;
             }
 
             #qrcode canvas {
@@ -670,136 +644,47 @@
             }
 
             .invitation-code {
-                font-size: 1.4rem;
-                letter-spacing: 1px;
-                margin-bottom: 1rem;
-                line-height: 1.3;
+                font-size: 1.5rem;
             }
 
-            .copy-button {
-                padding: 0.7rem 1rem;
-                font-size: 0.85rem;
+            .info-section {
+                padding: 1.5rem 1rem;
             }
 
             .info-card {
-                padding: 1rem;
-                margin-bottom: 1rem;
+                padding: 1.2rem;
             }
 
             .info-card h3 {
                 font-size: 1rem;
-                margin-bottom: 0.8rem;
-            }
-
-            .info-card .icon {
-                width: 20px;
-                height: 20px;
-                font-size: 0.8rem;
             }
 
             .info-list li {
                 font-size: 0.85rem;
-                margin-bottom: 0.6rem;
-                padding-left: 1.2rem;
-                line-height: 1.4;
-            }
-
-            .info-list li::before {
-                font-size: 1rem;
             }
 
             .action-button {
-                padding: 0.8rem 1rem;
                 font-size: 0.9rem;
-            }
-
-            .action-button svg {
-                width: 18px;
-                height: 18px;
-            }
-
-            .content-wrapper {
-                padding: 0.5rem;
-            }
-
-            .footer {
-                padding: 1rem 0.5rem;
-            }
-
-            .footer p {
-                font-size: 0.8rem;
-            }
-
-            .footer-links a {
-                font-size: 0.8rem;
-            }
-
-            .toast {
-                bottom: 1rem;
-                left: 1rem;
-                right: 1rem;
-                transform: none;
-                font-size: 0.9rem;
-                padding: 0.8rem 1rem;
-            }
-
-            .toast.show {
-                transform: translateY(-10px);
             }
         }
 
-        /* 超小螢幕優化 */
         @media (max-width: 360px) {
-            .hero-title {
-                font-size: 1.8rem;
-            }
-
-            .hero-subtitle {
-                font-size: 0.95rem;
-            }
-
-            .hero-description {
-                font-size: 0.85rem;
-            }
-
             #qrcode canvas {
-                width: 160px !important;
-                height: 160px !important;
+                width: 150px !important;
+                height: 150px !important;
             }
 
             .invitation-code {
-                font-size: 1.2rem;
-                letter-spacing: 0.5px;
-            }
-
-            .copy-button {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.8rem;
-            }
-
-            .info-card {
-                padding: 0.8rem;
-            }
-
-            .info-list li {
-                font-size: 0.8rem;
-                padding-left: 1rem;
-            }
-
-            .action-button {
-                padding: 0.7rem 0.8rem;
-                font-size: 0.85rem;
+                font-size: 1.3rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 載入動畫 -->
-    <div id="loading" class="loading">
+    <div class="loading">
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- 背景裝飾 -->
     <div class="bg-decoration">
         <div class="floating-shape shape-1"></div>
         <div class="floating-shape shape-2"></div>
@@ -807,41 +692,33 @@
         <div class="floating-shape shape-4"></div>
     </div>
 
-    <!-- 主要內容 -->
     <div class="main-container">
-        <!-- 英雄區域 -->
-        <section class="hero-section">
+        <header class="hero-section">
             <h1 class="hero-title">會考落點分析</h1>
-            <p class="hero-subtitle">智能分析 · 精準預測 · 助您選校無憂</p>
-            <p class="hero-description">專業的會考成績分析系統，為您提供最準確的落點預測和選校建議</p>
-        </section>
+            <p class="hero-description">
+            </p>
+        </header>
 
-        <!-- 主要內容區域 -->
-        <div class="content-wrapper">
+        <main class="content-wrapper">
             <div class="main-card">
                 <div class="card-content">
-                    <!-- QR Code 區域 -->
-                    <div class="qr-section">
+                    <section class="qr-section">
                         <div class="qr-container">
                             <h2 class="qr-title">專屬邀請碼</h2>
                             <div id="qrcode"></div>
-                            <div class="invitation-code" id="invitation-code"></div>
-                            <button class="copy-button" onclick="copyInvitationCode()">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                            <p class="invitation-code" id="invitationCodeDisplay"></p>
+                            <button class="copy-button" id="copyButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3m-3 0h3m-3 0V9m3 3v3m-2-4H7a2 2 0 00-2 2v4a2 2 0 002 2h10a2 2 0 002-2v-4a2 2 0 00-2-2h-3m-2-4V7a2 2 0 012-2h4a2 2 0 012 2v4m-6 0H9"></path>
                                 </svg>
                                 複製邀請碼
                             </button>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- 資訊區域 -->
-                    <div class="info-section">
+                    <section class="info-section">
                         <div class="info-card">
-                            <h3>
-                                <span class="icon">💡</span>
-                                使用說明
-                            </h3>
+                            <h3><span class="icon">💡</span> 使用說明</h3>
                             <ul class="info-list">
                                 <li>請將此 QR Code 妥善保存</li>
                                 <li>掃描 QR Code 可快速輸入邀請碼</li>
@@ -851,10 +728,7 @@
                         </div>
 
                         <div class="info-card">
-                            <h3>
-                                <span class="icon">🎯</span>
-                                系統特色
-                            </h3>
+                            <h3><span class="icon">🚀</span> 系統特色</h3>
                             <ul class="info-list">
                                 <li>AI 智能分析歷年錄取數據</li>
                                 <li>即時更新最新招生資訊</li>
@@ -864,209 +738,131 @@
                         </div>
 
                         <div class="button-group">
-                            <a href="#" class="action-button" onclick="downloadQRCode()">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            <a href="#" class="action-button" id="downloadQrCodeButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
                                 </svg>
                                 下載 QR Code
                             </a>
-                            <a href="https://tyctw.github.io/spare/" class="action-button secondary">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <a href="#" class="action-button secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
                                 </svg>
                                 進入系統
                             </a>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- 頁腳 -->
         <footer class="footer">
-            <p>&copy; <span id="currentYear"></span> 全國會考落點分析系統. 版權所有</p>
+            <p>&copy; 2025 全國會考落點分析系統. 版權所有</p>
             <div class="footer-links">
-                <a href="https://rcpe.vercel.app/" target="_blank">官方網站</a>
-                <a href="mailto:tyctw.analyze@gmail.com">聯繫我們</a>
-
+                <a href="#">官方網站</a>
+                <a href="#">聯繫我們</a>
+                <a href="#">服務條款</a>
+                <a href="#">隱私政策</a>
+                <a href="#">常見問題</a>
             </div>
         </footer>
     </div>
 
-    <!-- 成功訊息 -->
-    <div id="toast" class="toast">
-        <span id="toast-message">邀請碼已複製到剪貼簿</span>
-    </div>
+    <div class="toast" id="toastMessage"></div>
 
     <script>
-        // 等待文檔完全加載
-        document.addEventListener('DOMContentLoaded', function() {
-            // 設置當前年份
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.querySelector('.loading');
+            const invitationCodeDisplay = document.getElementById('invitationCodeDisplay');
+            const copyButton = document.getElementById('copyButton');
+            const downloadQrCodeButton = document.getElementById('downloadQrCodeButton');
+            const qrcodeContainer = document.getElementById('qrcode');
+            let qrcodeInstance = null;
 
-            // 從 URL 獲取邀請碼
+            // 獲取 URL 中的邀請碼
             const urlParams = new URLSearchParams(window.location.search);
-            const invitationCode = urlParams.get('code');
+            const invitationCode = urlParams.get('code') || 'DEMOCODE'; // 如果沒有邀請碼，則使用 'DEMOCODE'
 
-            if (!invitationCode) {
-                document.getElementById('qrcode').innerHTML = '<p style="color: #ef4444; padding: 1rem;">未提供邀請碼</p>';
-                document.getElementById('invitation-code').textContent = '請提供邀請碼參數';
-                document.getElementById('loading').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loading').style.display = 'none';
-                }, 500);
-                return;
+            invitationCodeDisplay.textContent = invitationCode;
+
+            // 生成 QR Code
+            function generateQrCode() {
+                if (qrcodeInstance) {
+                    qrcodeInstance.clear();
+                }
+                qrcodeInstance = new QRCode(qrcodeContainer, {
+                    text: invitationCode,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
             }
 
-            // 顯示邀請碼
-            document.getElementById('invitation-code').textContent = invitationCode;
+            generateQrCode();
 
-            // 生成包含邀請碼的 QR Code
-            new QRCode(document.getElementById('qrcode'), {
-                text: invitationCode,
-                width: 256,
-                height: 256,
-                colorDark: '#1e1b4b', // 使用新設計的深色
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
+            // 複製邀請碼功能
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(invitationCode).then(() => {
+                    showToast('邀請碼已複製！');
+                }).catch(err => {
+                    console.error('複製失敗:', err);
+                    showToast('複製失敗，請手動複製！');
+                });
             });
 
-            // 隱藏載入動畫
-            setTimeout(() => {
-                document.getElementById('loading').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loading').style.display = 'none';
-                }, 500);
-            }, 1500);
-        });
+            // 下載 QR Code 功能
+            downloadQrCodeButton.addEventListener('click', (event) => {
+                event.preventDefault(); // 阻止默認的連結跳轉行為
 
-        // 顯示訊息函數 (用於下載)
-        function showMessage(type, duration = 3000) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            if (type === 'success') {
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                if (isMobile) {
-                    toastMessage.textContent = '請長按圖片儲存';
+                const qrCodeCanvas = qrcodeContainer.querySelector('canvas');
+                if (qrCodeCanvas) {
+                    const dataURL = qrCodeCanvas.toDataURL("image/png");
+
+                    // 嘗試使用下載屬性
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = dataURL;
+                    downloadLink.download = "qrcode.png";
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    // 如果上述方法失敗（例如在某些移動瀏覽器上），提供替代方案
+                    // 檢查是否是移動設備
+                    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+                    if (isMobile) {
+                        // 延遲執行，給予下載屬性足夠時間觸發
+                        setTimeout(() => {
+                            // 檢查下載是否成功，如果沒有，則在新視窗打開
+                            // 這裡沒有直接的方法判斷下載是否成功，所以直接提供提示
+                            showToast('如果下載未自動開始，請長按圖片保存！');
+                            // window.open(dataURL, '_blank'); // 也可以選擇直接在新視窗打開
+                        }, 500);
+                    } else {
+                        showToast('QR Code 已開始下載！');
+                    }
+
                 } else {
-                    toastMessage.textContent = 'QR Code 已開始下載！';
+                    showToast('QR Code 尚未生成，請稍候！');
                 }
-            } else {
-                toastMessage.textContent = '下載失敗，請重新嘗試！';
+            });
+
+            // 顯示 Toast 訊息
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toastMessage.classList.add('show');
+                setTimeout(() => {
+                    toastMessage.classList.remove('show');
+                }, 3000);
             }
 
-            toast.classList.add('show');
+            // 隱藏載入畫面
+            loadingScreen.style.opacity = '0';
             setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
-
-        // 下載 QR Code 功能
-        function downloadQRCode() {
-            const qrCodeCanvas = document.querySelector('#qrcode canvas');
-            const invitationCode = new URLSearchParams(window.location.search).get('code');
-            
-            if (!qrCodeCanvas || !invitationCode) {
-                showMessage('error');
-                return;
-            }
-
-            // 檢測是否為移動設備
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-            if (isMobile) {
-                try {
-                    // 創建一個臨時的 a 標籤
-                    const link = document.createElement('a');
-                    link.href = qrCodeCanvas.toDataURL();
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                    
-                    // 觸發點擊
-                    const clickEvent = new MouseEvent('click', {
-                        view: window,
-                        bubbles: true,
-                        cancelable: false
-                    });
-                    link.dispatchEvent(clickEvent);
-                    
-                    showMessage('success');
-                } catch (error) {
-                    console.error('處理 QR Code 時發生錯誤：', error);
-                    showMessage('error');
-                }
-            } else {
-                // 桌面版：使用下載方式
-                try {
-                    const link = document.createElement('a');
-                    link.download = `邀請碼_${invitationCode}.png`;
-                    link.href = qrCodeCanvas.toDataURL();
-                    
-                    document.body.appendChild(link);
-                    link.click();
-                    
-                    setTimeout(() => {
-                        document.body.removeChild(link);
-                    }, 100);
-                    
-                    showMessage('success');
-                } catch (error) {
-                    console.error('下載 QR Code 時發生錯誤：', error);
-                    showMessage('error');
-                }
-            }
-        }
-
-        // 複製邀請碼功能
-        function copyInvitationCode() {
-            const invitationCode = document.getElementById('invitation-code').textContent;
-            if (!invitationCode) return;
-
-            // 使用 Clipboard API
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(invitationCode).then(() => {
-                    showCopySuccess();
-                }).catch(() => {
-                    // 如果 Clipboard API 失敗，使用傳統方法
-                    fallbackCopyText(invitationCode);
-                });
-            } else {
-                // 在不支援 Clipboard API 的環境使用傳統方法
-                fallbackCopyText(invitationCode);
-            }
-        }
-
-        // 傳統複製文字方法
-        function fallbackCopyText(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-
-            try {
-                document.execCommand('copy');
-                showCopySuccess();
-            } catch (err) {
-                console.error('複製失敗：', err);
-            }
-
-            document.body.removeChild(textArea);
-        }
-
-        // 顯示複製成功提示
-        function showCopySuccess() {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            toastMessage.textContent = '邀請碼已複製到剪貼簿';
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
-        }
+                loadingScreen.style.display = 'none';
+            }, 500);
+        });
     </script>
 </body>
 </html>
