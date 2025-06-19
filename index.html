@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全國會考落點分析 - QR Code</title>
+    <title>全國會考落點分析 - 專屬邀請碼</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,454 +14,492 @@
         }
 
         :root {
-            --primary: #0ea5e9;
-            --primary-dark: #0284c7;
-            --secondary: #38bdf8;
-            --accent: #f59e0b;
-            --background: #f8fafc;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --white: #ffffff;
-            --radius: 24px;
-            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --primary-gradient: linear-gradient(135deg, #1e1b4b 0%, #3730a3 50%, #4f46e5 100%);
+            --secondary-gradient: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 35px 60px -12px rgba(0, 0, 0, 0.6);
+            --border-radius: 24px;
+            --border-radius-lg: 32px;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
-            background: linear-gradient(135deg, #e0f2fe, #f0f9ff, #e0f2fe);
+            font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 動態背景裝飾 */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: var(--secondary-gradient);
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            top: 20%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: var(--accent-gradient);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            bottom: 20%;
+            left: 20%;
+            width: 120px;
+            height: 120px;
+            background: var(--secondary-gradient);
+            clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+            animation-delay: 10s;
+        }
+
+        .shape-4 {
+            bottom: 30%;
+            right: 10%;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            animation-delay: 15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            75% { transform: translateY(-20px) rotate(270deg); }
+        }
+
+        /* 主要內容區域 */
+        .main-container {
+            position: relative;
+            z-index: 1;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            color: var(--text);
-            line-height: 1.6;
         }
 
-        .header {
-            position: relative;
-            padding: 3rem 1.5rem 6rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: var(--white);
+        /* 頭部區域 */
+        .hero-section {
             text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            padding: 4rem 2rem 2rem;
+            position: relative;
         }
 
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
             margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: -4rem auto 2rem;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .card {
-            background: var(--glass-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--glass-shadow);
-            overflow: hidden;
-            position: relative;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 2rem;
-            padding: 2.5rem;
-        }
-
-        .qr-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: var(--radius);
-            position: relative;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .code-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .copy-button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .copy-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .copy-button svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .copy-success {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(5, 150, 105, 0.9);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .copy-success.show {
-            opacity: 1;
-        }
-
-        #qrcode {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        #qrcode:hover {
-            transform: scale(1.02);
-        }
-
-        #invitation-code {
-            margin-top: 1.5rem;
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #06b6d4 100%);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            line-height: 1.1;
         }
 
-        .info-section {
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* 主要內容卡片 */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 2rem;
+        }
+
+        .main-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 1200px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        /* QR Code 區域 */
+        .qr-section {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .qr-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--secondary-gradient);
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .qr-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .qr-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        #qrcode {
+            background: var(--text-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #qrcode::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--secondary-gradient);
+            border-radius: var(--border-radius);
+            z-index: -1;
+        }
+
+        #qrcode:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .invitation-code {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--secondary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .copy-button {
+            background: var(--secondary-gradient);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .copy-button:hover::before {
+            left: 100%;
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.4);
+        }
+
+        .copy-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 資訊區域 */
+        .info-section {
+            padding: 3rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .info-card {
-            background: rgba(254, 243, 199, 0.7);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(254, 243, 199, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: all 0.3s ease;
         }
 
-        .info-card h2 {
-            color: #92400e;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
+        .info-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .info-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+        }
+
+        .info-card .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
         }
 
         .info-list {
             list-style: none;
+            space-y: 1rem;
         }
 
         .info-list li {
-            color: #92400e;
-            margin-bottom: 0.8rem;
-            padding-left: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding-left: 2rem;
             position: relative;
+            line-height: 1.6;
         }
 
         .info-list li::before {
-            content: '•';
+            content: '→';
             position: absolute;
             left: 0;
-            color: var(--accent);
+            color: #06b6d4;
             font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        .download-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: rgba(14, 165, 233, 0.9);
-            color: var(--white);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-weight: 500;
+        /* 按鈕組 */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-button {
+            flex: 1;
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 16px;
+            padding: 1.25rem 2rem;
             font-size: 1.1rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2);
-            width: 100%;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
 
-        .download-button::before {
+        .action-button::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
         }
 
-        .download-button:hover::before {
-            transform: translateX(100%);
+        .action-button:hover::before {
+            left: 100%;
         }
 
-        .download-button:hover {
+        .action-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
         }
 
-        .success-message {
-            color: #059669;
-            font-size: 0.9rem;
-            margin-top: 0.8rem;
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.3s ease;
-            padding: 0.5rem 1rem;
-            background: rgba(5, 150, 105, 0.1);
-            border-radius: 8px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        .action-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
         }
 
-        .error-message {
-            color: #dc2626;
-            font-size: 0.9rem;
-            margin-top: 0.8rem;
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.3s ease;
-            padding: 0.5rem 1rem;
-            background: rgba(220, 38, 38, 0.1);
-            border-radius: 8px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+        .action-button.secondary:hover {
+            box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2);
         }
 
+        .action-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 頁腳 */
         .footer {
-            margin-top: auto;
-            background: var(--glass-bg);
-            padding: 2rem;
             text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid var(--glass-border);
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .footer p {
-            color: var(--text-light);
+            color: var(--text-muted);
             margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .footer-links a {
-            color: var(--primary);
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--primary-dark);
+            color: #06b6d4;
         }
 
-        @media (max-width: 768px) {
-            .card-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .header {
-                padding: 2rem 1rem 4rem;
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .header p {
-                font-size: 1rem;
-            }
-
-            .container {
-                margin-top: -3rem;
-                padding: 0 1rem;
-            }
-
-            .qr-section {
-                padding: 1rem;
-            }
-
-            #qrcode {
-                padding: 1rem;
-            }
-
-            #qrcode img {
-                width: 200px !important;
-                height: 200px !important;
-            }
-
-            #invitation-code {
-                font-size: 1.4rem;
-                margin-top: 1rem;
-            }
-
-            .info-card {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .info-card h2 {
-                font-size: 1.1rem;
-            }
-
-            .info-list li {
-                font-size: 0.9rem;
-                margin-bottom: 0.6rem;
-            }
-
-            .button-group {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .download-button,
-            .system-button {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .footer {
-                padding: 1.5rem 1rem;
-            }
-
-            .footer p {
-                font-size: 0.9rem;
-            }
-
-            .footer-links {
-                gap: 1rem;
-            }
-
-            .footer-links a {
-                font-size: 0.9rem;
-            }
-
-            .code-container {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .copy-button {
-                width: 100%;
-                justify-content: center;
-            }
+        /* 成功訊息 */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary-gradient);
+            color: var(--text-primary);
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(-10px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
         }
 
+        /* 載入動畫 */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--primary-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #06b6d4;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -471,141 +509,393 @@
             100% { transform: rotate(360deg); }
         }
 
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            width: 100%;
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-description {
+                font-size: 0.95rem;
+                padding: 0 1rem;
+            }
+
+            .card-content {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .qr-section {
+                padding: 2rem 1.5rem;
+                order: 1;
+            }
+
+            .info-section {
+                padding: 2rem 1.5rem;
+                order: 2;
+            }
+
+            .qr-title {
+                font-size: 1.3rem;
+                margin-bottom: 1.5rem;
+            }
+
+            #qrcode {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            #qrcode canvas {
+                width: 200px !important;
+                height: 200px !important;
+            }
+
+            .invitation-code {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+                margin-bottom: 1rem;
+                word-break: break-all;
+            }
+
+            .copy-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .info-card {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .info-card h3 {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .info-list li {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+                padding-left: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+            }
+
+            .action-button {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+            }
+
+            .hero-section {
+                padding: 2rem 1rem 1rem;
+            }
+
+            .footer {
+                padding: 1.5rem 1rem;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .footer-links a {
+                font-size: 0.9rem;
+            }
+
+            /* 手機版特殊優化 */
+            .main-card {
+                margin: 0;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .floating-shape {
+                display: none; /* 手機版隱藏背景裝飾以提升性能 */
+            }
         }
 
-        .system-button {
-            flex: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            background: rgba(5, 150, 105, 0.9);
-            color: var(--white);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-weight: 500;
-            font-size: 1.1rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.2);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-description {
+                font-size: 0.9rem;
+                padding: 0 0.5rem;
+            }
+
+            .hero-section {
+                padding: 1.5rem 0.5rem 1rem;
+            }
+
+            .qr-section,
+            .info-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .qr-title {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            #qrcode {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            #qrcode canvas {
+                width: 180px !important;
+                height: 180px !important;
+            }
+
+            .invitation-code {
+                font-size: 1.4rem;
+                letter-spacing: 1px;
+                margin-bottom: 1rem;
+                line-height: 1.3;
+            }
+
+            .copy-button {
+                padding: 0.7rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .info-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .info-card h3 {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .info-card .icon {
+                width: 20px;
+                height: 20px;
+                font-size: 0.8rem;
+            }
+
+            .info-list li {
+                font-size: 0.85rem;
+                margin-bottom: 0.6rem;
+                padding-left: 1.2rem;
+                line-height: 1.4;
+            }
+
+            .info-list li::before {
+                font-size: 1rem;
+            }
+
+            .action-button {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .action-button svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .content-wrapper {
+                padding: 0.5rem;
+            }
+
+            .footer {
+                padding: 1rem 0.5rem;
+            }
+
+            .footer p {
+                font-size: 0.8rem;
+            }
+
+            .footer-links a {
+                font-size: 0.8rem;
+            }
+
+            .toast {
+                bottom: 1rem;
+                left: 1rem;
+                right: 1rem;
+                transform: none;
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+
+            .toast.show {
+                transform: translateY(-10px);
+            }
         }
 
-        .system-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
+        /* 超小螢幕優化 */
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
 
-        .system-button:hover::before {
-            transform: translateX(100%);
-        }
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
 
-        .system-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
-        }
+            .hero-description {
+                font-size: 0.85rem;
+            }
 
-        .system-button svg {
-            width: 20px;
-            height: 20px;
+            #qrcode canvas {
+                width: 160px !important;
+                height: 160px !important;
+            }
+
+            .invitation-code {
+                font-size: 1.2rem;
+                letter-spacing: 0.5px;
+            }
+
+            .copy-button {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .info-card {
+                padding: 0.8rem;
+            }
+
+            .info-list li {
+                font-size: 0.8rem;
+                padding-left: 1rem;
+            }
+
+            .action-button {
+                padding: 0.7rem 0.8rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 載入動畫 -->
     <div id="loading" class="loading">
         <div class="loading-spinner"></div>
     </div>
 
-    <header class="header">
-        <h1>全國會考落點分析</h1>
-        <p>您的專屬邀請碼 QR Code</p>
-    </header>
+    <!-- 背景裝飾 -->
+    <div class="bg-decoration">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+    </div>
 
-    <main class="container">
-        <div class="card">
-            <div class="card-grid">
-                <div class="qr-section">
-                    <div id="qrcode"></div>
-                    <div class="code-container">
-                        <div id="invitation-code"></div>
-                        <button class="copy-button" onclick="copyInvitationCode()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-                            </svg>
-                            複製邀請碼
-                        </button>
+    <!-- 主要內容 -->
+    <div class="main-container">
+        <!-- 英雄區域 -->
+        <section class="hero-section">
+            <h1 class="hero-title">會考落點分析</h1>
+            <p class="hero-subtitle">智能分析 · 精準預測 · 助您選校無憂</p>
+            <p class="hero-description">專業的會考成績分析系統，為您提供最準確的落點預測和選校建議</p>
+        </section>
+
+        <!-- 主要內容區域 -->
+        <div class="content-wrapper">
+            <div class="main-card">
+                <div class="card-content">
+                    <!-- QR Code 區域 -->
+                    <div class="qr-section">
+                        <div class="qr-container">
+                            <h2 class="qr-title">專屬邀請碼</h2>
+                            <div id="qrcode"></div>
+                            <div class="invitation-code" id="invitation-code"></div>
+                            <button class="copy-button" onclick="copyInvitationCode()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                                </svg>
+                                複製邀請碼
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="info-section">
-                    <div class="info-card">
-                        <h2>
-                            <span>💡</span>
-                            使用說明
-                        </h2>
-                        <ul class="info-list">
-                            <li>請將此 QR Code 妥善保存</li>
-                            <li>掃描 QR Code 可快速輸入邀請碼</li>
-                            <li>邀請碼有效期為當下整點59分</li>
-                            <li>如遇到問題，請聯繫我們的支援團隊</li>
-                        </ul>
-                    </div>
-                    <div>
+
+                    <!-- 資訊區域 -->
+                    <div class="info-section">
+                        <div class="info-card">
+                            <h3>
+                                <span class="icon">💡</span>
+                                使用說明
+                            </h3>
+                            <ul class="info-list">
+                                <li>請將此 QR Code 妥善保存</li>
+                                <li>掃描 QR Code 可快速輸入邀請碼</li>
+                                <li>邀請碼僅限本人使用，請勿外流</li>
+                                <li>如有問題請聯繫客服人員</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>
+                                <span class="icon">🎯</span>
+                                系統特色
+                            </h3>
+                            <ul class="info-list">
+                                <li>AI 智能分析歷年錄取數據</li>
+                                <li>即時更新最新招生資訊</li>
+                                <li>個人化選校建議推薦</li>
+                                <li>專業升學顧問諮詢服務</li>
+                            </ul>
+                        </div>
+
                         <div class="button-group">
-                            <button class="download-button" onclick="downloadQRCode()">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            <a href="#" class="action-button" onclick="downloadQRCode()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                                 下載 QR Code
-                            </button>
-                            <a href="https://tyctw.github.io/spare/" target="_blank" class="system-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </a>
+                            <a href="https://tyctw.github.io/spare/" class="action-button secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 進入系統
                             </a>
-                        </div>
-                        <div id="success-message" class="success-message">
-                            QR Code 已成功下載！
-                        </div>
-                        <div id="error-message" class="error-message">
-                            下載失敗，請重新嘗試！
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="footer">
-        <p>© <span id="currentYear"></span> 全國會考落點分析 | 版權所有</p>
-        <div class="footer-links">
-            <a href="https://tyctw.github.io/" target="_blank">官方網站</a>
-            <a href="mailto:tyctw.analyze@gmail.com">聯繫我們</a>
-        </div>
-    </footer>
+        <!-- 頁腳 -->
+        <footer class="footer">
+            <p>&copy; <span id="currentYear"></span> 全國會考落點分析系統. 版權所有</p>
+            <div class="footer-links">
+                <a href="https://rcpe.vercel.app/" target="_blank">官方網站</a>
+                <a href="mailto:tyctw.analyze@gmail.com">聯繫我們</a>
 
-    <div id="copy-success" class="copy-success">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        邀請碼已複製到剪貼簿
+            </div>
+        </footer>
+    </div>
+
+    <!-- 成功訊息 -->
+    <div id="toast" class="toast">
+        <span id="toast-message">邀請碼已複製到剪貼簿</span>
     </div>
 
     <script>
@@ -621,7 +911,10 @@
             if (!invitationCode) {
                 document.getElementById('qrcode').innerHTML = '<p style="color: #ef4444; padding: 1rem;">未提供邀請碼</p>';
                 document.getElementById('invitation-code').textContent = '請提供邀請碼參數';
-                document.getElementById('loading').style.display = 'none';
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
                 return;
             }
 
@@ -633,52 +926,48 @@
                 text: invitationCode,
                 width: 256,
                 height: 256,
-                colorDark: '#4f46e5',
+                colorDark: '#1e1b4b', // 使用新設計的深色
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
 
             // 隱藏載入動畫
             setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-            }, 500);
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+            }, 1500);
         });
 
-        // 顯示訊息函數
+        // 顯示訊息函數 (用於下載)
         function showMessage(type, duration = 3000) {
-            const successMsg = document.getElementById('success-message');
-            const errorMsg = document.getElementById('error-message');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
             
-            // 隱藏所有訊息
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-            
-            // 顯示指定類型的訊息
-            const targetMsg = type === 'success' ? successMsg : errorMsg;
-            targetMsg.style.display = 'block';
-
-            // 更新成功訊息的文字
             if (type === 'success') {
                 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
                 if (isMobile) {
-                    successMsg.textContent = '請長按圖片儲存';
+                    toastMessage.textContent = '請長按圖片儲存';
                 } else {
-                    successMsg.textContent = 'QR Code 已開始下載！';
+                    toastMessage.textContent = 'QR Code 已開始下載！';
                 }
+            } else {
+                toastMessage.textContent = '下載失敗，請重新嘗試！';
             }
-            
-            // 設定定時器隱藏訊息
+
+            toast.classList.add('show');
             setTimeout(() => {
-                targetMsg.style.display = 'none';
+                toast.classList.remove('show');
             }, duration);
         }
 
         // 下載 QR Code 功能
         function downloadQRCode() {
-            const qrCodeImg = document.querySelector('#qrcode img');
+            const qrCodeCanvas = document.querySelector('#qrcode canvas');
             const invitationCode = new URLSearchParams(window.location.search).get('code');
             
-            if (!qrCodeImg || !invitationCode) {
+            if (!qrCodeCanvas || !invitationCode) {
                 showMessage('error');
                 return;
             }
@@ -690,7 +979,7 @@
                 try {
                     // 創建一個臨時的 a 標籤
                     const link = document.createElement('a');
-                    link.href = qrCodeImg.src;
+                    link.href = qrCodeCanvas.toDataURL();
                     link.target = '_blank';
                     link.rel = 'noopener noreferrer';
                     
@@ -712,7 +1001,7 @@
                 try {
                     const link = document.createElement('a');
                     link.download = `邀請碼_${invitationCode}.png`;
-                    link.href = qrCodeImg.src;
+                    link.href = qrCodeCanvas.toDataURL();
                     
                     document.body.appendChild(link);
                     link.click();
@@ -731,7 +1020,7 @@
 
         // 複製邀請碼功能
         function copyInvitationCode() {
-            const invitationCode = new URLSearchParams(window.location.search).get('code');
+            const invitationCode = document.getElementById('invitation-code').textContent;
             if (!invitationCode) return;
 
             // 使用 Clipboard API
@@ -770,12 +1059,15 @@
 
         // 顯示複製成功提示
         function showCopySuccess() {
-            const successElement = document.getElementById('copy-success');
-            successElement.classList.add('show');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = '邀請碼已複製到剪貼簿';
+            toast.classList.add('show');
             setTimeout(() => {
-                successElement.classList.remove('show');
+                toast.classList.remove('show');
             }, 2000);
         }
     </script>
 </body>
-</html> 
+</html>
+
